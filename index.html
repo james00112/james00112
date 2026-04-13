@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>🔐 FaceAuth Enterprise · Employee Management</title>
+    <title>🔐 FaceAPI Sentinel · Advanced Recognition</title>
     <style>
         * {
             box-sizing: border-box;
@@ -12,87 +12,109 @@
         body {
             margin: 0;
             min-height: 100vh;
-            background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+            background: linear-gradient(145deg, #0a0f1c 0%, #151e2f 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
         .app-container {
-            max-width: 1400px;
+            max-width: 1600px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 25, 45, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(100, 150, 255, 0.15);
             border-radius: 2.5rem;
-            padding: 1.8rem 2rem 2.2rem;
-            box-shadow: 0 25px 40px -10px rgba(0, 0, 0, 0.6);
+            padding: 2rem;
+            box-shadow: 0 30px 50px -15px rgba(0, 0, 0, 0.8);
         }
         h1 {
-            margin: 0 0 0.3rem 0;
+            margin: 0 0 0.5rem 0;
             font-weight: 600;
-            font-size: 2.1rem;
-            letter-spacing: -0.02em;
-            color: #f0f9ff;
+            font-size: 2.2rem;
+            color: #e0edff;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
+            border-bottom: 2px solid #3b5b9e;
+            padding-bottom: 1rem;
         }
         .badge {
-            background: #2dd4bf;
-            color: #0f172a;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: #0a0f1c;
             font-size: 0.9rem;
-            font-weight: 600;
-            padding: 4px 14px;
+            font-weight: 700;
+            padding: 5px 16px;
             border-radius: 40px;
             text-transform: uppercase;
         }
         .main-layout {
             display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 24px;
-            margin-top: 20px;
+            grid-template-columns: 1fr 420px;
+            gap: 25px;
+            margin-top: 25px;
         }
-        .left-panel {
-            min-width: 0;
-        }
+        
+        /* State Machine Panel */
         .security-panel {
             display: flex;
-            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            margin: 0 0 20px;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            background: rgba(8, 20, 40, 0.6);
+            border-radius: 20px;
+            border: 1px solid #2a4480;
         }
         .state-machine-view {
-            background: #0b1120cc;
-            padding: 10px 20px;
-            border-radius: 60px;
-            border-left: 5px solid #38bdf8;
-            box-shadow: inset 0 1px 3px #00000055;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .state-badge {
+            background: #1e3a5f;
+            padding: 10px 25px;
+            border-radius: 50px;
+            border-left: 6px solid #4facfe;
         }
         .state-label {
             text-transform: uppercase;
             font-weight: 600;
             font-size: 0.8rem;
-            color: #94a3b8;
+            color: #a0bbd8;
         }
         .state-value {
-            font-size: 1.8rem;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #e0edff;
+            line-height: 1.2;
+        }
+        .security-metrics {
+            display: flex;
+            gap: 25px;
+        }
+        .metric {
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 1.4rem;
             font-weight: 700;
-            color: #e2e8f0;
-            line-height: 1.3;
+            color: #4facfe;
         }
-        .security-context {
-            color: #a5f3fc;
-            font-size: 0.9rem;
+        .metric-label {
+            font-size: 0.75rem;
+            color: #8ba3c7;
+            text-transform: uppercase;
         }
+        
+        /* Video Zone */
         .video-zone {
             position: relative;
-            border-radius: 28px;
+            border-radius: 24px;
             overflow: hidden;
             background: #000;
-            box-shadow: 0 20px 30px -5px #00000080;
+            box-shadow: 0 20px 40px -10px #000000, 0 0 0 2px #2a4480;
             margin-bottom: 20px;
         }
         video {
@@ -111,33 +133,55 @@
             transform: scaleX(-1);
             pointer-events: none;
         }
+        
+        /* Detection Info Overlay */
+        .detection-overlay-info {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            padding: 10px 18px;
+            border-radius: 40px;
+            color: white;
+            font-size: 0.9rem;
+            border: 1px solid #4facfe;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        /* Controls */
         .controls {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            align-items: center;
-            margin: 15px 0 10px;
+            gap: 12px;
+            margin: 20px 0;
         }
         button {
-            background: #1e293b;
-            border: 1px solid #475569;
-            color: #f1f5f9;
+            background: #1e3350;
+            border: 1px solid #3b5b9e;
+            color: #e0edff;
             font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 60px;
+            padding: 12px 22px;
+            border-radius: 50px;
             font-size: 0.95rem;
             cursor: pointer;
-            transition: 0.15s;
-            box-shadow: 0 8px 12px #00000030;
+            transition: all 0.2s;
+            box-shadow: 0 5px 15px #00000040;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
         button:hover {
-            background: #2d3b52;
-            border-color: #60a5fa;
-            transform: translateY(-2px);
+            background: #2a4480;
+            border-color: #4facfe;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px #00000060;
         }
         button.primary {
-            background: #2563eb;
-            border-color: #93c5fd;
+            background: #4facfe;
+            border-color: #a0d0ff;
+            color: #0a1424;
         }
         button.warning {
             background: #b45309;
@@ -148,89 +192,64 @@
             border-color: #34d399;
         }
         button:disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             pointer-events: none;
+            filter: grayscale(0.5);
         }
         
-        /* Admin Panel - Right Side */
+        /* Admin Panel */
         .admin-panel {
-            background: #0f172a80;
-            border-radius: 28px;
-            padding: 20px;
-            backdrop-filter: blur(8px);
-            border: 1px solid #334155;
+            background: rgba(10, 20, 40, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 22px;
+            border: 1px solid #2a4480;
             height: fit-content;
         }
         .admin-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid #3b82f6;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #4facfe;
         }
         .admin-title {
-            color: #e2e8f0;
-            font-size: 1.3rem;
+            color: #e0edff;
+            font-size: 1.4rem;
             font-weight: 600;
         }
-        .admin-badge {
-            background: #7c3aed;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            color: white;
-        }
-        .employee-section {
-            margin-bottom: 24px;
-        }
         .section-title {
-            color: #94a3b8;
+            color: #a0bbd8;
             font-size: 0.9rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-        }
-        .employee-form {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .form-group label {
-            color: #cbd5e1;
-            font-size: 0.85rem;
-            font-weight: 500;
+            margin: 20px 0 12px;
         }
         input, select {
-            background: #020617;
-            border: 1px solid #475569;
+            background: #0a1424;
+            border: 1px solid #2a4480;
             color: white;
-            padding: 10px 14px;
-            border-radius: 12px;
+            padding: 12px 16px;
+            border-radius: 16px;
             font-size: 0.95rem;
+            width: 100%;
+            margin-bottom: 12px;
             outline: none;
         }
         input:focus, select:focus {
-            border-color: #38bdf8;
-            box-shadow: 0 0 0 3px #1e3a8a55;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px #1e4a7a55;
         }
         .employee-list {
-            max-height: 300px;
+            max-height: 350px;
             overflow-y: auto;
-            margin-top: 16px;
+            margin-top: 15px;
         }
         .employee-card {
-            background: #1e293b;
-            border-radius: 12px;
+            background: #0d1b2e;
+            border-radius: 14px;
             padding: 12px;
             margin-bottom: 8px;
-            border: 1px solid #3b4a5e;
+            border: 1px solid #2a3a60;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -239,73 +258,91 @@
             flex: 1;
         }
         .employee-name {
-            color: #e2e8f0;
+            color: #e0edff;
             font-weight: 600;
-            font-size: 1rem;
         }
         .employee-details {
-            color: #94a3b8;
+            color: #8ba3c7;
             font-size: 0.8rem;
             margin-top: 4px;
+        }
+        .face-status {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .face-registered {
+            background: #065f46;
+            color: #a7f3d0;
+        }
+        .face-missing {
+            background: #7f1d1d;
+            color: #fecaca;
         }
         .employee-actions {
             display: flex;
             gap: 6px;
         }
         .employee-actions button {
-            padding: 6px 10px;
-            font-size: 0.75rem;
+            padding: 6px 12px;
+            font-size: 0.8rem;
             box-shadow: none;
         }
-        .batch-controls {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-        }
-        .stats-grid {
+        
+        /* Detection Stats */
+        .detection-stats {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin: 16px 0;
+            margin: 20px 0;
         }
         .stat-card {
-            background: #02061780;
-            border-radius: 12px;
-            padding: 12px;
+            background: #0d1b2e;
+            border-radius: 16px;
+            padding: 15px;
             text-align: center;
+            border: 1px solid #2a3a60;
         }
         .stat-value {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 700;
-            color: #38bdf8;
+            color: #4facfe;
         }
         .stat-label {
-            color: #94a3b8;
+            color: #8ba3c7;
             font-size: 0.8rem;
         }
-        .log-area {
-            margin-top: 18px;
-            color: #9ca3af;
+        
+        .log-panel {
+            margin-top: 20px;
+            padding: 15px;
+            background: #0a101c;
+            border-radius: 16px;
+            border: 1px solid #2a3a60;
+            color: #a0bbd8;
             font-size: 0.85rem;
-            max-height: 60px;
+            max-height: 120px;
             overflow-y: auto;
-            border-top: 1px dashed #3f4e6b;
-            padding-top: 10px;
         }
-        .registration-mode {
-            background: #1e293b;
-            border-radius: 12px;
-            padding: 12px;
-            margin: 12px 0;
+        
+        .feature-toggles {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
         }
-        .mode-indicator {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            background: #7c3aed;
-            color: white;
-            font-size: 0.8rem;
-            font-weight: 600;
+        .toggle-btn {
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            background: #0d1b2e;
+        }
+        .toggle-btn.active {
+            background: #4facfe;
+            color: #0a1424;
+            border-color: #a0d0ff;
         }
     </style>
 </head>
@@ -313,120 +350,113 @@
 
 <div class="app-container">
     <h1>
-        <span>🧠 FaceID Enterprise</span>
-        <span class="badge">state machine · v2.0</span>
+        <span>🧠 FaceAPI Sentinel · Advanced</span>
+        <span class="badge">SSD + Expressions + Age/Gender</span>
     </h1>
 
     <div class="main-layout">
-        <!-- LEFT: Camera & Detection -->
+        <!-- LEFT PANEL: Camera & Detection -->
         <div class="left-panel">
             <div class="security-panel">
                 <div class="state-machine-view">
-                    <div class="state-label">⚙️ CURRENT STATE</div>
-                    <div class="state-value" id="stateDisplay">LOCKED</div>
+                    <div class="state-badge">
+                        <div class="state-label">Current State</div>
+                        <div class="state-value" id="stateDisplay">LOCKED</div>
+                    </div>
                 </div>
-                <div class="security-context">
-                    <span id="authLevelDisplay">🔒 Level: 0</span><br>
-                    <span id="transitionHint">⏳ waiting</span>
+                <div class="security-metrics">
+                    <div class="metric">
+                        <div class="metric-value" id="authLevel">0</div>
+                        <div class="metric-label">Auth Level</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value" id="faceCount">0</div>
+                        <div class="metric-label">Faces</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value" id="matchConfidence">-</div>
+                        <div class="metric-label">Confidence</div>
+                    </div>
                 </div>
             </div>
 
             <div class="video-zone">
                 <video id="video" autoplay playsinline muted></video>
                 <canvas id="overlay"></canvas>
+                <div class="detection-overlay-info" id="detectionInfo">
+                    <span>👤 No face detected</span>
+                </div>
+            </div>
+
+            <!-- Advanced Feature Toggles -->
+            <div class="feature-toggles">
+                <button id="toggleSSD" class="toggle-btn">🔬 SSD MobileNet</button>
+                <button id="toggleExpressions" class="toggle-btn active">😊 Expressions</button>
+                <button id="toggleAgeGender" class="toggle-btn active">👤 Age/Gender</button>
+                <button id="toggleLandmarks" class="toggle-btn active">📍 Landmarks</button>
             </div>
 
             <div class="controls">
                 <button id="startCameraBtn" class="primary">📷 Start Camera</button>
                 <button id="stopCameraBtn">⏹️ Stop</button>
-                <button id="detectOnceBtn">🔍 Detect</button>
-                <button id="toggleTrackingBtn">⏯️ Tracking</button>
-                <button id="lockSystemBtn" class="warning">🔐 Lock</button>
+                <button id="detectOnceBtn">🔍 Detect Once</button>
+                <button id="toggleTrackingBtn">▶️ Start Tracking</button>
+                <button id="lockSystemBtn" class="warning">🔐 Lock System</button>
             </div>
 
-            <div class="registration-mode" id="registrationModePanel">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="color: #e2e8f0;">📋 Quick Registration</span>
-                    <span class="mode-indicator" id="regModeIndicator">IDLE</span>
+            <div class="detection-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalDetections">0</div>
+                    <div class="stat-label">Total Detections</div>
                 </div>
-                <div style="display: flex; gap: 8px; margin-top: 10px;">
-                    <input type="text" id="quickRegName" placeholder="Employee name" style="flex:1;" />
-                    <button id="quickRegBtn" class="success">Register Face</button>
+                <div class="stat-card">
+                    <div class="stat-value" id="matchRate">0%</div>
+                    <div class="stat-label">Match Rate</div>
                 </div>
             </div>
 
-            <div class="log-area" id="logPanel">
-                [SYSTEM] Ready. Initialize camera.
+            <div class="log-panel" id="logPanel">
+                [SYSTEM] Ready. Click 'Start Camera' to begin.
             </div>
         </div>
 
-        <!-- RIGHT: Admin Panel - Employee Management -->
+        <!-- RIGHT PANEL: Admin & Employee Management -->
         <div class="admin-panel">
             <div class="admin-header">
-                <span class="admin-title">👨‍💼 Employee Database</span>
-                <span class="admin-badge">ADMIN</span>
+                <span class="admin-title">👨‍💼 Employee DB</span>
+                <span class="badge" style="font-size:0.8rem;">ADMIN</span>
             </div>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value" id="totalEmployees">0</div>
-                    <div class="stat-label">Total Employees</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="facesRegistered">0</div>
-                    <div class="stat-label">Faces Registered</div>
-                </div>
-            </div>
+            <div class="section-title">➕ Register New Employee</div>
+            <input type="text" id="empName" placeholder="Full Name (e.g., John Smith)" />
+            <input type="text" id="empId" placeholder="Employee ID (e.g., EMP001)" />
+            <select id="empDept">
+                <option value="Engineering">Engineering</option>
+                <option value="HR">HR</option>
+                <option value="Sales">Sales</option>
+                <option value="Executive">Executive</option>
+                <option value="Security">Security</option>
+            </select>
+            <select id="empAccess">
+                <option value="1">Level 1 - Visitor</option>
+                <option value="2">Level 2 - Staff</option>
+                <option value="3">Level 3 - Admin</option>
+            </select>
+            <button id="registerEmployeeBtn" class="primary" style="width:100%; margin-top:8px;">
+                📸 Register & Capture Face
+            </button>
 
-            <div class="employee-section">
-                <div class="section-title">➕ Add New Employee</div>
-                <div class="employee-form">
-                    <div class="form-group">
-                        <label>Full Name</label>
-                        <input type="text" id="empName" placeholder="John Doe" />
-                    </div>
-                    <div class="form-group">
-                        <label>Employee ID</label>
-                        <input type="text" id="empId" placeholder="EMP001" />
-                    </div>
-                    <div class="form-group">
-                        <label>Department</label>
-                        <select id="empDept">
-                            <option value="Engineering">Engineering</option>
-                            <option value="HR">HR</option>
-                            <option value="Sales">Sales</option>
-                            <option value="Management">Management</option>
-                            <option value="IT">IT</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Access Level</label>
-                        <select id="empAccess">
-                            <option value="1">Level 1 - Basic</option>
-                            <option value="2">Level 2 - Standard</option>
-                            <option value="3">Level 3 - Admin</option>
-                        </select>
-                    </div>
-                    <button id="addEmployeeBtn" class="primary">➕ Add Employee & Capture Face</button>
-                </div>
+            <div class="section-title">📋 Employee Directory</div>
+            <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                <button id="exportDBBtn" style="flex:1;">📤 Export</button>
+                <button id="importDBBtn" style="flex:1;">📥 Import</button>
+                <button id="clearDBBtn" class="warning" style="flex:1;">🗑️ Clear</button>
             </div>
-
-            <div class="employee-section">
-                <div class="section-title">📋 Employee List</div>
-                <div class="batch-controls">
-                    <button id="exportDataBtn" style="flex:1;">📤 Export</button>
-                    <button id="importDataBtn" style="flex:1;">📥 Import</button>
-                    <button id="clearAllBtn" class="warning" style="flex:1;">🗑️ Clear All</button>
-                </div>
-                <div class="employee-list" id="employeeListContainer">
-                    <!-- Dynamic employee cards -->
-                </div>
+            <div class="employee-list" id="employeeListContainer">
+                <!-- Dynamic content -->
             </div>
-
-            <div style="margin-top: 16px; padding: 12px; background: #02061740; border-radius: 12px;">
-                <div style="color: #94a3b8; font-size: 0.85rem;">
-                    <strong>🔐 Security Note:</strong> Face registration requires camera active and state in IDLE/UNLOCKED.
-                </div>
+            <div style="margin-top: 15px; padding: 12px; background: #0a1424; border-radius: 12px; color: #8ba3c7; font-size:0.85rem;">
+                <strong>🔐 Active Features:</strong> SSD detection, Expression analysis, Age/Gender estimation, Face landmarks
             </div>
         </div>
     </div>
@@ -437,7 +467,7 @@
     (function(){
         "use strict";
 
-        // ---------- STATE MACHINE ----------
+        // ========== STATE MACHINE ==========
         const STATES = {
             LOCKED: 'LOCKED',
             IDLE: 'IDLE',
@@ -456,18 +486,40 @@
 
         let currentState = STATES.LOCKED;
         let authLevel = 0;
-        let lastMatchedUser = null;
+        let lastMatchedEmployee = null;
         let trackingInterval = null;
 
-        // DOM Elements
+        // ========== FEATURE FLAGS ==========
+        let useSSD = false; // false = TinyFaceDetector, true = SSD MobileNet
+        let enableExpressions = true;
+        let enableAgeGender = true;
+        let enableLandmarks = true;
+
+        // ========== DATA & MODELS ==========
+        let employees = [];
+        let labeledDescriptors = [];
+        let faceMatcher = null;
+        let modelsLoaded = false;
+        let stream = null;
+        
+        // Stats
+        let totalDetections = 0;
+        let successfulMatches = 0;
+        let currentFaceCount = 0;
+        let lastMatchConfidence = '-';
+
+        // ========== DOM ELEMENTS ==========
         const video = document.getElementById('video');
         const canvas = document.getElementById('overlay');
         const ctx = canvas.getContext('2d');
         const stateDisplay = document.getElementById('stateDisplay');
-        const authLevelDisplay = document.getElementById('authLevelDisplay');
-        const transitionHint = document.getElementById('transitionHint');
+        const authLevelEl = document.getElementById('authLevel');
+        const faceCountEl = document.getElementById('faceCount');
+        const matchConfidenceEl = document.getElementById('matchConfidence');
+        const detectionInfo = document.getElementById('detectionInfo');
         const logPanel = document.getElementById('logPanel');
-        const regModeIndicator = document.getElementById('regModeIndicator');
+        const totalDetectionsEl = document.getElementById('totalDetections');
+        const matchRateEl = document.getElementById('matchRate');
         
         // Buttons
         const startCameraBtn = document.getElementById('startCameraBtn');
@@ -475,54 +527,40 @@
         const detectOnceBtn = document.getElementById('detectOnceBtn');
         const toggleTrackingBtn = document.getElementById('toggleTrackingBtn');
         const lockSystemBtn = document.getElementById('lockSystemBtn');
-        const quickRegBtn = document.getElementById('quickRegBtn');
-        const quickRegName = document.getElementById('quickRegName');
-        const addEmployeeBtn = document.getElementById('addEmployeeBtn');
-        const exportDataBtn = document.getElementById('exportDataBtn');
-        const importDataBtn = document.getElementById('importDataBtn');
-        const clearAllBtn = document.getElementById('clearAllBtn');
+        const registerEmployeeBtn = document.getElementById('registerEmployeeBtn');
+        const exportDBBtn = document.getElementById('exportDBBtn');
+        const importDBBtn = document.getElementById('importDBBtn');
+        const clearDBBtn = document.getElementById('clearDBBtn');
+        
+        // Toggle buttons
+        const toggleSSD = document.getElementById('toggleSSD');
+        const toggleExpressions = document.getElementById('toggleExpressions');
+        const toggleAgeGender = document.getElementById('toggleAgeGender');
+        const toggleLandmarks = document.getElementById('toggleLandmarks');
 
-        // Employee form inputs
-        const empName = document.getElementById('empName');
-        const empId = document.getElementById('empId');
-        const empDept = document.getElementById('empDept');
-        const empAccess = document.getElementById('empAccess');
-
-        // Stats
-        const totalEmployeesEl = document.getElementById('totalEmployees');
-        const facesRegisteredEl = document.getElementById('facesRegistered');
-
-        // Data structures
-        let employees = []; // Array of { id, name, department, accessLevel, faceDescriptor, registeredAt }
-        let labeledDescriptors = [];
-        let faceMatcher = null;
-        let modelsLoaded = false;
-        let stream = null;
-
-        // Load from localStorage
+        // ========== INITIALIZATION ==========
         function loadFromStorage() {
             try {
-                const saved = localStorage.getItem('faceauth_employees');
+                const saved = localStorage.getItem('faceapi_enterprise_db');
                 if (saved) {
                     const parsed = JSON.parse(saved);
-                    // Reconstruct descriptors
                     employees = parsed.map(emp => ({
                         ...emp,
                         faceDescriptor: emp.faceDescriptor ? new Float32Array(emp.faceDescriptor) : null
                     }));
-                    updateLabeledDescriptors();
-                    log(`Loaded ${employees.length} employees from storage`, 'success');
                 } else {
-                    // Add sample employees for demo
+                    // Sample employees
                     employees = [
-                        { id: 'EMP001', name: 'John Admin', department: 'Management', accessLevel: 3, faceDescriptor: null, registeredAt: new Date().toISOString() },
-                        { id: 'EMP002', name: 'Sarah Engineer', department: 'Engineering', accessLevel: 2, faceDescriptor: null, registeredAt: new Date().toISOString() }
+                        { id: 'EMP001', name: 'Alice Johnson', department: 'Executive', accessLevel: 3, faceDescriptor: null, registeredAt: new Date().toISOString() },
+                        { id: 'EMP002', name: 'Bob Williams', department: 'Engineering', accessLevel: 2, faceDescriptor: null, registeredAt: new Date().toISOString() }
                     ];
                 }
+                updateLabeledDescriptors();
                 renderEmployeeList();
                 updateStats();
+                log('Database loaded', 'success');
             } catch (e) {
-                log('Error loading data', 'error');
+                log('Error loading database', 'error');
             }
         }
 
@@ -532,7 +570,7 @@
                     ...emp,
                     faceDescriptor: emp.faceDescriptor ? Array.from(emp.faceDescriptor) : null
                 }));
-                localStorage.setItem('faceauth_employees', JSON.stringify(toSave));
+                localStorage.setItem('faceapi_enterprise_db', JSON.stringify(toSave));
             } catch (e) {}
         }
 
@@ -549,148 +587,203 @@
                 : null;
         }
 
-        function updateStats() {
-            totalEmployeesEl.textContent = employees.length;
-            const withFaces = employees.filter(e => e.faceDescriptor).length;
-            facesRegisteredEl.textContent = withFaces;
-        }
-
-        // ---------- Logging ----------
+        // ========== LOGGING ==========
         function log(msg, type='info') {
-            const prefix = { info: '📋', success: '✅', warn: '⚠️', error: '❌', state: '🔁' }[type] || '•';
+            const prefix = { info: '📋', success: '✅', warn: '⚠️', error: '❌', state: '🔄' }[type] || '•';
             const entry = `[${new Date().toLocaleTimeString()}] ${prefix} ${msg}`;
             logPanel.innerHTML = entry + '<br>' + logPanel.innerHTML;
-            if (logPanel.children.length > 5) logPanel.removeChild(logPanel.lastChild);
+            if (logPanel.children.length > 8) {
+                while (logPanel.children.length > 8) logPanel.removeChild(logPanel.lastChild);
+            }
         }
 
-        // ---------- State Management ----------
+        // ========== STATE MANAGEMENT ==========
         function transitionTo(newState, meta = {}) {
             const from = currentState;
             if (!transitions[from]?.includes(newState)) {
-                log(`Blocked: ${from} → ${newState}`, 'error');
+                log(`Blocked transition: ${from} → ${newState}`, 'error');
                 return false;
             }
 
             if (newState === STATES.UNLOCKED && !meta.bypass && !meta.faceMatch) {
-                log('Cannot force UNLOCKED', 'error');
+                log('UNLOCKED requires face match', 'error');
                 return false;
             }
 
-            if (from === STATES.TRACKING) stopTrackingLoop();
+            if (from === STATES.TRACKING) stopTracking();
 
             currentState = newState;
             
             if (newState === STATES.UNLOCKED) {
-                authLevel = 1;
-                if (meta.user) lastMatchedUser = meta.user;
-                log(`🔓 UNLOCKED · ${lastMatchedUser || 'user'}`, 'success');
+                authLevel = lastMatchedEmployee?.accessLevel || 3;
+                log(`🔓 UNLOCKED - Welcome ${lastMatchedEmployee?.name || 'User'} (Level ${authLevel})`, 'success');
             } else if (newState === STATES.LOCKED) {
                 authLevel = 0;
-                lastMatchedUser = null;
-                log('🔒 LOCKED', 'warn');
+                lastMatchedEmployee = null;
+                log('🔒 System LOCKED', 'warn');
             } else {
                 if (newState !== STATES.UNLOCKED) authLevel = 0;
             }
 
-            if (newState === STATES.TRACKING) startTrackingLoop();
+            if (newState === STATES.TRACKING) startTracking();
 
-            updateUIForState();
+            updateUI();
             log(`State: ${from} → ${newState}`, 'state');
             return true;
         }
 
-        function stopTrackingLoop() {
+        function stopTracking() {
             if (trackingInterval) {
                 clearInterval(trackingInterval);
                 trackingInterval = null;
             }
         }
 
-        function startTrackingLoop() {
+        function startTracking() {
             if (trackingInterval) clearInterval(trackingInterval);
             trackingInterval = setInterval(async () => {
                 if (currentState !== STATES.TRACKING) {
-                    stopTrackingLoop();
+                    stopTracking();
                     return;
                 }
                 if (stream && !video.paused && modelsLoaded) {
-                    await performDetectionAndMatch(true);
+                    await performDetection(true);
                 }
-            }, 600);
+            }, 500);
         }
 
-        function updateUIForState() {
+        function updateUI() {
             stateDisplay.textContent = currentState;
-            regModeIndicator.textContent = currentState;
-            authLevelDisplay.textContent = `🔒 Level: ${authLevel} ${authLevel===1?'(UNLOCKED)':''}`;
+            authLevelEl.textContent = authLevel;
             
-            if (currentState === STATES.LOCKED) transitionHint.textContent = '⛔ Locked';
-            else if (currentState === STATES.UNLOCKED) transitionHint.textContent = '🔓 Unlocked';
-            else if (currentState === STATES.TRACKING) transitionHint.textContent = '👁️ Tracking';
-            else transitionHint.textContent = '🟢 Ready';
-
-            toggleTrackingBtn.textContent = (currentState === STATES.TRACKING) ? '⏸️ Stop' : '▶️ Track';
+            toggleTrackingBtn.textContent = (currentState === STATES.TRACKING) ? '⏸️ Stop Tracking' : '▶️ Start Tracking';
             
             const canRegister = (currentState === STATES.IDLE || currentState === STATES.UNLOCKED) && stream;
-            quickRegBtn.disabled = !canRegister;
-            addEmployeeBtn.disabled = !canRegister;
+            registerEmployeeBtn.disabled = !canRegister;
             
             detectOnceBtn.disabled = (currentState === STATES.LOCKED || !stream || currentState === STATES.TRACKING);
             lockSystemBtn.disabled = (currentState === STATES.LOCKED);
             startCameraBtn.disabled = !!stream;
             stopCameraBtn.disabled = !stream;
+            
+            updateMatchRate();
         }
 
-        // ---------- Face Detection ----------
-        async function performDetectionAndMatch(autoUnlock = false) {
+        function updateStats() {
+            const withFaces = employees.filter(e => e.faceDescriptor).length;
+            totalDetectionsEl.textContent = totalDetections;
+            faceCountEl.textContent = currentFaceCount;
+            matchConfidenceEl.textContent = lastMatchConfidence;
+        }
+
+        function updateMatchRate() {
+            const rate = totalDetections > 0 ? ((successfulMatches / totalDetections) * 100).toFixed(1) : '0';
+            matchRateEl.textContent = rate + '%';
+        }
+
+        // ========== FACE DETECTION (ADVANCED) ==========
+        async function performDetection(autoUnlock = false) {
             if (!stream || video.paused || !modelsLoaded) return null;
 
             try {
-                const detections = await faceapi.detectAllFaces(video, 
-                    new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.5 }))
-                    .withFaceLandmarks()
-                    .withFaceDescriptors();
+                let detections;
                 
-                drawDetections(detections);
-
-                if (!detections.length) return null;
-
-                if (faceMatcher) {
+                // Choose detector based on toggle
+                if (useSSD) {
+                    detections = await faceapi.detectAllFaces(video,
+                        new faceapi.SsdMobilenetv1Options({ minConfidence: 0.5 }));
+                } else {
+                    detections = await faceapi.detectAllFaces(video,
+                        new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.5 }));
+                }
+                
+                // Chain additional features
+                if (enableLandmarks) detections = await detections.withFaceLandmarks();
+                if (enableExpressions) detections = await detections.withFaceExpressions();
+                if (enableAgeGender) detections = await detections.withAgeAndGender();
+                
+                const descriptors = await faceapi.computeFaceDescriptors(video, detections);
+                
+                // Attach descriptors to detections
+                detections.forEach((d, i) => d.descriptor = descriptors[i]);
+                
+                totalDetections++;
+                currentFaceCount = detections.length;
+                
+                // Draw everything
+                drawResults(detections);
+                
+                // Update detection info
+                updateDetectionInfo(detections);
+                
+                // Face matching if we have registered faces
+                if (detections.length > 0 && faceMatcher) {
                     const results = detections.map(d => faceMatcher.findBestMatch(d.descriptor));
                     const bestResult = results.reduce((best, curr) => 
                         (curr.distance < best.distance ? curr : best), results[0]);
                     
                     const isMatch = bestResult.distance < 0.5;
-                    
-                    drawMatchLabels(detections, results);
+                    lastMatchConfidence = isMatch ? ((1 - bestResult.distance) * 100).toFixed(1) + '%' : 'No match';
                     
                     if (isMatch) {
+                        successfulMatches++;
                         const employee = employees.find(e => e.id === bestResult.label);
-                        const displayName = employee ? employee.name : bestResult.label;
                         
-                        if (currentState === STATES.TRACKING && authLevel === 0) {
-                            transitionTo(STATES.UNLOCKED, { faceMatch: true, user: displayName });
-                        } else if (currentState === STATES.DETECTING && autoUnlock) {
-                            transitionTo(STATES.UNLOCKED, { faceMatch: true, user: displayName });
+                        if (employee) {
+                            lastMatchedEmployee = employee;
+                            
+                            if ((currentState === STATES.TRACKING && authLevel === 0) || 
+                                (currentState === STATES.DETECTING && autoUnlock)) {
+                                transitionTo(STATES.UNLOCKED, { faceMatch: true });
+                            }
+                            
+                            log(`✅ Match: ${employee.name} (${bestResult.distance.toFixed(3)})`, 'success');
                         }
-                        log(`👤 Match: ${displayName} (${bestResult.distance.toFixed(2)})`, 'success');
                     }
-                    return { detections, match: bestResult };
-                } else {
-                    drawNoMatchLabels(detections);
+                    
+                    drawMatchLabels(detections, results);
                 }
+                
+                updateStats();
+                updateMatchRate();
+                
                 return detections;
             } catch (e) {
-                console.warn('Detection error', e);
+                console.error('Detection error:', e);
                 return null;
             }
         }
 
-        function drawDetections(detections) {
+        function drawResults(detections) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            if (!detections.length) return;
-            faceapi.draw.drawDetections(canvas, detections.map(d => d.detection));
-            faceapi.draw.drawFaceLandmarks(canvas, detections.map(d => d.landmarks));
+            
+            detections.forEach(detection => {
+                // Draw box
+                const box = detection.detection.box;
+                ctx.strokeStyle = '#4facfe';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(box.x, box.y, box.width, box.height);
+                
+                // Draw landmarks
+                if (enableLandmarks && detection.landmarks) {
+                    faceapi.draw.drawFaceLandmarks(canvas, [detection]);
+                }
+                
+                // Build info text
+                let infoText = [];
+                if (enableAgeGender && detection.age && detection.gender) {
+                    infoText.push(`${Math.round(detection.age)} yrs · ${detection.gender}`);
+                }
+                if (enableExpressions && detection.expressions) {
+                    const expr = detection.expressions;
+                    const dominant = Object.keys(expr).reduce((a, b) => expr[a] > expr[b] ? a : b);
+                    infoText.push(`${dominant} (${(expr[dominant] * 100).toFixed(0)}%)`);
+                }
+                
+                if (infoText.length > 0) {
+                    new faceapi.draw.DrawTextField(infoText, box.bottomLeft).draw(canvas);
+                }
+            });
         }
 
         function drawMatchLabels(detections, matchResults) {
@@ -698,22 +791,46 @@
                 const box = det.detection.box;
                 const res = matchResults[i];
                 const employee = employees.find(e => e.id === res.label);
-                const text = employee ? `${employee.name}` : res.label;
-                new faceapi.draw.DrawTextField([text], box.bottomLeft).draw(canvas);
+                const text = employee ? `${employee.name} (${res.distance.toFixed(2)})` : `Unknown`;
+                new faceapi.draw.DrawTextField([text], { x: box.x, y: box.y - 10 }).draw(canvas);
             });
         }
 
-        function drawNoMatchLabels(detections) {
-            detections.forEach(det => {
-                new faceapi.draw.DrawTextField(['unknown'], det.detection.box.bottomLeft).draw(canvas);
-            });
+        function updateDetectionInfo(detections) {
+            if (detections.length === 0) {
+                detectionInfo.innerHTML = '<span>👤 No face detected</span>';
+                return;
+            }
+            
+            let html = `<span>👥 ${detections.length} face(s) detected · `;
+            
+            if (detections.length > 0 && enableAgeGender) {
+                const det = detections[0];
+                if (det.age && det.gender) {
+                    html += `${Math.round(det.age)}y ${det.gender} · `;
+                }
+            }
+            
+            if (detections.length > 0 && enableExpressions) {
+                const det = detections[0];
+                if (det.expressions) {
+                    const expr = det.expressions;
+                    const dominant = Object.keys(expr).reduce((a, b) => expr[a] > expr[b] ? a : b);
+                    html += `${dominant}`;
+                }
+            }
+            
+            html += '</span>';
+            detectionInfo.innerHTML = html;
         }
 
-        // ---------- Camera ----------
+        // ========== CAMERA ==========
         async function startCamera() {
             if (stream) return;
             try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } });
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { width: 640, height: 480, facingMode: 'user' } 
+                });
                 video.srcObject = stream;
                 await new Promise(r => video.onloadedmetadata = r);
                 video.play();
@@ -722,17 +839,26 @@
                 canvas.height = video.videoHeight;
                 
                 if (!modelsLoaded) {
-                    log('Loading models...', 'info');
-                    await faceapi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights');
-                    await faceapi.nets.faceLandmark68Net.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights');
-                    await faceapi.nets.faceRecognitionNet.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights');
+                    log('⏳ Loading AI models...', 'info');
+                    const modelUrl = 'https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights';
+                    
+                    // Load all models
+                    await Promise.all([
+                        faceapi.nets.tinyFaceDetector.loadFromUri(modelUrl),
+                        faceapi.nets.ssdMobilenetv1.loadFromUri(modelUrl),
+                        faceapi.nets.faceLandmark68Net.loadFromUri(modelUrl),
+                        faceapi.nets.faceRecognitionNet.loadFromUri(modelUrl),
+                        faceapi.nets.faceExpressionNet.loadFromUri(modelUrl),
+                        faceapi.nets.ageGenderNet.loadFromUri(modelUrl)
+                    ]);
+                    
                     modelsLoaded = true;
-                    log('Models ready', 'success');
+                    log('✅ All models loaded! SSD, Expressions, Age/Gender ready', 'success');
                 }
                 
                 if (currentState === STATES.LOCKED) transitionTo(STATES.IDLE);
-                updateUIForState();
-                log('Camera active', 'success');
+                updateUI();
+                log('📸 Camera active', 'success');
             } catch (err) {
                 log(`Camera error: ${err.message}`, 'error');
             }
@@ -744,36 +870,42 @@
                 stream = null;
                 video.srcObject = null;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                if (currentState === STATES.TRACKING) stopTrackingLoop();
+                if (currentState === STATES.TRACKING) stopTracking();
                 if (currentState !== STATES.LOCKED) transitionTo(STATES.LOCKED);
-                updateUIForState();
+                updateUI();
                 log('Camera stopped', 'info');
             }
         }
 
-        // ---------- Employee Management ----------
+        // ========== EMPLOYEE MANAGEMENT ==========
         function renderEmployeeList() {
             const container = document.getElementById('employeeListContainer');
             container.innerHTML = employees.map(emp => `
                 <div class="employee-card">
                     <div class="employee-info">
-                        <div class="employee-name">${emp.name}</div>
+                        <div class="employee-name">
+                            ${emp.name}
+                            <span class="face-status ${emp.faceDescriptor ? 'face-registered' : 'face-missing'}">
+                                ${emp.faceDescriptor ? '✓ Face' : '⚠ No Face'}
+                            </span>
+                        </div>
                         <div class="employee-details">
-                            ID: ${emp.id} · ${emp.department} · Lvl ${emp.accessLevel}
-                            ${emp.faceDescriptor ? '✅' : '⚠️ No face'}
+                            ${emp.id} · ${emp.department} · Level ${emp.accessLevel}
                         </div>
                     </div>
                     <div class="employee-actions">
-                        <button onclick="window.captureFaceForEmployee('${emp.id}')" title="Capture Face">📸</button>
-                        <button onclick="window.deleteEmployee('${emp.id}')" class="warning" title="Delete">🗑️</button>
+                        <button onclick="window.captureFace('${emp.id}')" title="Capture Face">📸</button>
+                        <button onclick="window.deleteEmp('${emp.id}')" class="warning">🗑️</button>
                     </div>
                 </div>
             `).join('');
-            updateStats();
+            
+            const withFaces = employees.filter(e => e.faceDescriptor).length;
+            document.getElementById('faceCount').textContent = withFaces;
         }
 
-        window.captureFaceForEmployee = async function(empId) {
-            if (!stream) { log('Camera off', 'error'); return; }
+        window.captureFace = async function(empId) {
+            if (!stream) { log('Camera required', 'error'); return; }
             if (!(currentState === STATES.IDLE || currentState === STATES.UNLOCKED)) {
                 log('Cannot register in current state', 'error');
                 return;
@@ -783,8 +915,10 @@
             if (!employee) return;
             
             try {
-                const detection = await faceapi.detectSingleFace(video, 
-                    new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
+                const detection = await faceapi.detectSingleFace(video,
+                    useSSD ? new faceapi.SsdMobilenetv1Options() : new faceapi.TinyFaceDetectorOptions())
+                    .withFaceLandmarks()
+                    .withFaceDescriptor();
                 
                 if (!detection) { log('No face detected', 'warn'); return; }
                 
@@ -800,46 +934,44 @@
             }
         };
 
-        window.deleteEmployee = function(empId) {
+        window.deleteEmp = function(empId) {
             employees = employees.filter(e => e.id !== empId);
             updateLabeledDescriptors();
             saveToStorage();
             renderEmployeeList();
-            log(`Employee removed`, 'info');
+            log('Employee removed', 'info');
         };
 
-        async function addNewEmployee() {
-            const name = empName.value.trim();
-            const id = empId.value.trim();
+        async function registerNewEmployee() {
+            const name = document.getElementById('empName').value.trim();
+            const id = document.getElementById('empId').value.trim();
+            const dept = document.getElementById('empDept').value;
+            const access = parseInt(document.getElementById('empAccess').value);
             
             if (!name || !id) { log('Name and ID required', 'warn'); return; }
-            if (employees.find(e => e.id === id)) { log('Employee ID exists', 'warn'); return; }
-            if (!stream) { log('Camera required', 'warn'); return; }
+            if (employees.find(e => e.id === id)) { log('ID already exists', 'warn'); return; }
             
             const newEmp = {
-                id,
-                name,
-                department: empDept.value,
-                accessLevel: parseInt(empAccess.value),
+                id, name, department: dept, accessLevel: access,
                 faceDescriptor: null,
                 registeredAt: new Date().toISOString()
             };
             
             employees.push(newEmp);
             
-            // Try to capture face immediately
-            try {
-                const detection = await faceapi.detectSingleFace(video, 
-                    new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
-                
-                if (detection) {
-                    newEmp.faceDescriptor = detection.descriptor;
-                    log(`Face captured for ${name}`, 'success');
-                } else {
-                    log(`Employee added. Face capture skipped.`, 'info');
-                }
-            } catch (e) {
-                log(`Employee added without face`, 'warn');
+            // Try to capture face
+            if (stream) {
+                try {
+                    const detection = await faceapi.detectSingleFace(video,
+                        useSSD ? new faceapi.SsdMobilenetv1Options() : new faceapi.TinyFaceDetectorOptions())
+                        .withFaceLandmarks()
+                        .withFaceDescriptor();
+                    
+                    if (detection) {
+                        newEmp.faceDescriptor = detection.descriptor;
+                        log(`Face captured for ${name}`, 'success');
+                    }
+                } catch (e) {}
             }
             
             updateLabeledDescriptors();
@@ -847,46 +979,14 @@
             renderEmployeeList();
             
             // Clear form
-            empName.value = '';
-            empId.value = '';
-            log(`Employee ${name} added`, 'success');
-        }
-
-        async function quickRegister() {
-            const name = quickRegName.value.trim();
-            if (!name) { log('Enter name', 'warn'); return; }
-            if (!stream) { log('Camera off', 'error'); return; }
+            document.getElementById('empName').value = '';
+            document.getElementById('empId').value = '';
             
-            const id = `QUICK${Date.now()}`;
-            const newEmp = {
-                id,
-                name,
-                department: 'General',
-                accessLevel: 1,
-                faceDescriptor: null,
-                registeredAt: new Date().toISOString()
-            };
-            
-            try {
-                const detection = await faceapi.detectSingleFace(video, 
-                    new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
-                
-                if (!detection) { log('No face detected', 'warn'); return; }
-                
-                newEmp.faceDescriptor = detection.descriptor;
-                employees.push(newEmp);
-                updateLabeledDescriptors();
-                saveToStorage();
-                renderEmployeeList();
-                quickRegName.value = '';
-                log(`✅ ${name} registered`, 'success');
-            } catch (e) {
-                log('Registration failed', 'error');
-            }
+            log(`Employee ${name} registered`, 'success');
         }
 
         // Export/Import
-        function exportData() {
+        function exportDatabase() {
             const data = {
                 employees: employees.map(e => ({
                     ...e,
@@ -898,13 +998,13 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `employees_${Date.now()}.json`;
+            a.download = `faceapi_db_${Date.now()}.json`;
             a.click();
             URL.revokeObjectURL(url);
-            log('Data exported', 'success');
+            log('Database exported', 'success');
         }
 
-        function importData() {
+        function importDatabase() {
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = '.json';
@@ -925,30 +1025,20 @@
                         log(`Imported ${employees.length} employees`, 'success');
                     }
                 } catch (err) {
-                    log('Invalid import file', 'error');
+                    log('Invalid file', 'error');
                 }
             };
             input.click();
         }
 
-        function clearAllData() {
-            if (confirm('Delete ALL employees? This cannot be undone.')) {
-                employees = [];
-                updateLabeledDescriptors();
-                saveToStorage();
-                renderEmployeeList();
-                log('All data cleared', 'warn');
-            }
-        }
-
-        // ---------- Event Listeners ----------
+        // ========== EVENT LISTENERS ==========
         startCameraBtn.addEventListener('click', startCamera);
         stopCameraBtn.addEventListener('click', stopCamera);
         
         detectOnceBtn.addEventListener('click', async () => {
             if (!stream) return;
             transitionTo(STATES.DETECTING);
-            await performDetectionAndMatch(true);
+            await performDetection(true);
             if (currentState === STATES.DETECTING) transitionTo(STATES.IDLE);
         });
 
@@ -956,23 +1046,51 @@
             if (currentState === STATES.TRACKING) {
                 transitionTo(STATES.IDLE);
             } else {
-                if (currentState === STATES.LOCKED) { log('Locked', 'warn'); return; }
+                if (currentState === STATES.LOCKED) { log('System locked', 'warn'); return; }
                 transitionTo(STATES.TRACKING);
             }
         });
 
         lockSystemBtn.addEventListener('click', () => transitionTo(STATES.LOCKED));
-        
-        addEmployeeBtn.addEventListener('click', addNewEmployee);
-        quickRegBtn.addEventListener('click', quickRegister);
-        exportDataBtn.addEventListener('click', exportData);
-        importDataBtn.addEventListener('click', importData);
-        clearAllBtn.addEventListener('click', clearAllData);
+        registerEmployeeBtn.addEventListener('click', registerNewEmployee);
+        exportDBBtn.addEventListener('click', exportDatabase);
+        importDBBtn.addEventListener('click', importDatabase);
+        clearDBBtn.addEventListener('click', () => {
+            if (confirm('Delete ALL employees?')) {
+                employees = [];
+                updateLabeledDescriptors();
+                saveToStorage();
+                renderEmployeeList();
+                log('Database cleared', 'warn');
+            }
+        });
+
+        // Feature toggles
+        toggleSSD.addEventListener('click', () => {
+            useSSD = !useSSD;
+            toggleSSD.classList.toggle('active', useSSD);
+            log(`Detector: ${useSSD ? 'SSD MobileNet' : 'TinyFace'}`, 'info');
+        });
+
+        toggleExpressions.addEventListener('click', () => {
+            enableExpressions = !enableExpressions;
+            toggleExpressions.classList.toggle('active', enableExpressions);
+        });
+
+        toggleAgeGender.addEventListener('click', () => {
+            enableAgeGender = !enableAgeGender;
+            toggleAgeGender.classList.toggle('active', enableAgeGender);
+        });
+
+        toggleLandmarks.addEventListener('click', () => {
+            enableLandmarks = !enableLandmarks;
+            toggleLandmarks.classList.toggle('active', enableLandmarks);
+        });
 
         // Initialize
         loadFromStorage();
         transitionTo(STATES.LOCKED, { bypass: true });
-        log('🛡️ Enterprise system ready', 'state');
+        log('🛡️ FaceAPI Sentinel ready - All advanced features active', 'state');
     })();
 </script>
 </body>
